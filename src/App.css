@@ -5,10 +5,21 @@
   text-align: center;
 }
 
-.App {
-  width: 500px;
-  height: 500px;
+.Canvas-main {
+  padding: 20px 30px 40px 20px;
   background-color:rgb(58, 58, 58);
+  display: flex;
+  flex-direction: row;
+  column-gap: 30px;
+  justify-content: center;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: max-content;
+  /* width: 100px; */
 }
 
 .canvas-wrapper {
