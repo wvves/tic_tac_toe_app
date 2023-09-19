@@ -1,7 +1,5 @@
-import React, { HtmlHTMLAttributes, useRef } from 'react'
 import './App.css'
 import Canvas from './components/Canvas'
-import LoginPage from './page/LoginPage'
 
 function App() {
   
@@ -16,11 +14,11 @@ function App() {
           <button>login</button>
         </div>
         <div>
+          <div>your turn</div>
           <div>start game</div>
           <div>score</div>
           <div>0 : 0</div>
         </div>
-
       </div>
     </div>
     {/* <LoginPage/> */}
