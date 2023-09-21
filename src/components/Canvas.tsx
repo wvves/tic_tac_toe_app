@@ -1,44 +1,29 @@
 import React from 'react';
-import Modal from './Modal';
-
+import { Modal } from '@components/Modal';
+import { winCombinations } from '@utils/constants';
+import { checkDraw, checkWin } from '@utils/helpers';
 interface CanvasProps {
   size: number
 }
 
-const winCombinations = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
-
-function checkWin(arr: string[]) {
-  for(const combination of winCombinations) {
-    const [a, b, c] = combination;
-    if(arr[a] && arr[a] === arr[b] && arr[a] === arr[c]) {
-      return true;
-    }
-  }
-  return false
+interface IScore {
+  x: number
+  o: number
 }
-
-function checkDraw(arr: string[]) {
-  return [...arr].every((element) => element !== '')
-}
-
-const Canvas: React.FC<CanvasProps> = ({ size }) => {
+export const Canvas: React.FC<CanvasProps> = ({ size }) => {
   const canvasRefs = React.useRef<Array<HTMLCanvasElement | null>>([])
   const contexts = React.useRef<Array<CanvasRenderingContext2D | null>>([]);
+  const [gameActive, setGameActive] = React.useState<boolean>(true)
   const widhtSize = size + 6
   const [currentPlayer, setCurrentPlayer] = React.useState('x')
-  const [gameActive, setGameActive] = React.useState<boolean>(true)
-  const [pass] = React.useState<string[]>(Array(9).fill(''))
+  
+  const [pass, setPass] = React.useState<string[]>(Array(9).fill(''))
   const [modalMessage, setModalMessage] = React.useState<string>('')
 
+  const [score, setScore] = React.useState<IScore>({
+    x: 0,
+    o: 1
+  })
   React.useEffect(() => {
     canvasRefs.current.forEach((canvasRef, index) => {
       if (canvasRef) {
@@ -46,6 +31,11 @@ const Canvas: React.FC<CanvasProps> = ({ size }) => {
       }
     });
   }, []);
+
+  const changeActiveToDisable = (isActive: boolean) => {
+    setGameActive(isActive)
+  }
+
   // console.log(!!pass)
   // console.log(contexts)
   const drawing = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number): void => {
@@ -88,16 +78,31 @@ const Canvas: React.FC<CanvasProps> = ({ size }) => {
       }
     }
 
-    if(checkWin(pass)) {
+    if(checkWin(pass, winCombinations)) {
       setModalMessage(`winner: ${currentPlayer}!!!`)
-      setGameActive(false)
+      if(currentPlayer === 'x') {
+        setScore({... score, x: score.x + 1})
+      }
+      else {
+        setScore({... score, o: score.o + 1})
+      }
+      changeActiveToDisable(false)
     } else if(checkDraw(pass)) {
       setModalMessage('draw!')
-      setGameActive(false)
+      changeActiveToDisable(false)
     }
   }
 
-  console.log('check win', checkWin(pass))
+  const onNewGame = () => {
+    console.log('123')
+    changeActiveToDisable(true)
+    contexts.current.forEach((ctx) => {
+      ctx!.reset()
+    })
+    setPass(Array(9).fill(''))
+  }
+
+  console.log('check win', checkWin(pass, winCombinations))
   console.log('check draw', checkDraw(pass))
   console.log('passed', pass)
 
@@ -120,10 +125,21 @@ const Canvas: React.FC<CanvasProps> = ({ size }) => {
               </div>
           ))}
         </div>
-      </div>    
+      </div>
     </div>
+    {/**right panel */}
+    <div className='right-panel'>
+        <div>
+          <div>name</div>
+          <button>login</button>
+        </div>
+        <div>
+          <div>your turn</div>
+          <button onClick={onNewGame}>new game</button>
+          <div>score</div>
+          <div>{score.x} : {score.o}</div>
+        </div>
+      </div>
     </>
   );
 };
-
-export default Canvas;

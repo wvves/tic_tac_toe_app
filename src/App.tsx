@@ -1,25 +1,20 @@
 import './App.css'
-import Canvas from './components/Canvas'
+import React from 'react'
+import { Canvas } from '@components/Canvas'
+import { LoginPage } from '@pages'
 
 function App() {
   
+  // const [resetContexts, setResetContexts] = React.useState(() => {})
+
+
+  
+
   return (
     <>
     <div>tic tac toe</div>
     <div className='Canvas-main'>
-      <Canvas size={400}></Canvas>
-      <div className='right-panel'>
-        <div>
-          <div>name</div>
-          <button>login</button>
-        </div>
-        <div>
-          <div>your turn</div>
-          <div>start game</div>
-          <div>score</div>
-          <div>0 : 0</div>
-        </div>
-      </div>
+      <Canvas size={400} />
     </div>
     {/* <LoginPage/> */}
     </>
