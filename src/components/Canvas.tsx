@@ -54,8 +54,9 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
       if(currentPlayer === 'o') {
         if(context) {
           context.beginPath();
-          context.ellipse(centerX, centerY, 40, 55, 0, 0, 2 * Math.PI)
+          context.ellipse(centerX, centerY, 30, 30, 0, 0, 2 * Math.PI)
           context.strokeStyle = 'red'
+          context.lineWidth = 15
           context.stroke()
           context.closePath()
           pass[index] = '0'
@@ -65,11 +66,12 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
        
         if(context) {
           context.beginPath();
-          context.moveTo(rect.width - 20, 0 + 20)
-          context.lineTo(0 + 20, rect.height - 20)
-          context.moveTo(0 + 20, 0 + 20)
-          context.lineTo(rect.width - 20, rect.height - 20)
+          context.moveTo(rect.width - 30, 0 + 30)
+          context.lineTo(0 + 30, rect.height - 30)
+          context.moveTo(0 + 30, 0 + 30)
+          context.lineTo(rect.width - 30, rect.height - 30)
           context.strokeStyle = 'blue'
+          context.lineWidth = 15
           context.stroke()
           context.closePath()
           pass[index] = '1'
