@@ -1,22 +1,29 @@
 import './App.css'
-import React from 'react'
-import { Canvas } from '@components/Canvas'
-import { LoginPage } from '@pages'
+import { Canvas } from '@components'
+import { LoginPage, NotFoundPage } from '@pages'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { ROUTES } from '@utils/constants'
+
 
 function App() {
-  
-  // const [resetContexts, setResetContexts] = React.useState(() => {})
-
-
-  
 
   return (
     <>
-    <div>tic tac toe</div>
-    <div className='Canvas-main'>
-      <Canvas size={400} />
-    </div>
-    {/* <LoginPage/> */}
+    <BrowserRouter>
+    <Routes>
+      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.HOME} element={
+        <>
+        <div>tic tac toe</div>
+        <div className='Canvas-main'>
+          <Canvas size={400} />
+        </div>
+        </>
+      } />
+      <Route path='*' element={<NotFoundPage />} />
+    </Routes>
+    
+    </BrowserRouter>
     </>
   )
 }

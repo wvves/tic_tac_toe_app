@@ -22,10 +22,12 @@
     "baseUrl": "./src",
     "paths": {
       "@pages": ["./pages"],
-      "@components/*": ["./components/*"],
+      "@components": ["./components"],
       "@utils/constants": ["./utils/constants"],
       "@utils/helpers": ["./utils/helpers"],
-
+      "@utils/hooks": ["./utils/hooks"],
+      "@ui/fields": ["./ui/fields"],
+      "@ui/button": ["./ui/button"],
     }
   },
   "include": ["src"],

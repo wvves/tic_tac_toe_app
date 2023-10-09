@@ -1,7 +1,9 @@
 import React from 'react';
-import { Modal } from '@components/Modal';
-import { winCombinations } from '@utils/constants';
+import { Modal } from '@components';
+import { ROUTES, winCombinations } from '@utils/constants';
 import { checkDraw, checkWin } from '@utils/helpers';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 interface CanvasProps {
   size: number
 }
@@ -14,12 +16,13 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
   const canvasRefs = React.useRef<Array<HTMLCanvasElement | null>>([])
   const contexts = React.useRef<Array<CanvasRenderingContext2D | null>>([]);
   const [gameActive, setGameActive] = React.useState<boolean>(true)
-  const widhtSize = size + 6
+  const widhtSize = size + 12
   const [currentPlayer, setCurrentPlayer] = React.useState('x')
   
-  const [pass, setPass] = React.useState<string[]>(Array(9).fill(''))
+  const [gameField, setGameField] = React.useState<string[]>(Array(9).fill(''))
   const [modalMessage, setModalMessage] = React.useState<string>('')
 
+  const navigate = useNavigate()
   const [score, setScore] = React.useState<IScore>({
     x: 0,
     o: 1
@@ -50,7 +53,7 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
     const context = contexts.current[index]
     // console.log(context)
   
-    if(!pass[index]) {
+    if(!gameField[index]) {
       if(currentPlayer === 'o') {
         if(context) {
           context.beginPath();
@@ -59,7 +62,7 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
           context.lineWidth = 15
           context.stroke()
           context.closePath()
-          pass[index] = '0'
+          gameField[index] = '0'
         }
         setCurrentPlayer('x')
       } else {
@@ -74,13 +77,19 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
           context.lineWidth = 15
           context.stroke()
           context.closePath()
-          pass[index] = '1'
+          gameField[index] = '1'
         }
         setCurrentPlayer('o')
       }
     }
 
-    if(checkWin(pass, winCombinations)) {
+    // axios.post(`${import.meta.env.VITE_BACKEND_URL}/draw`, {array: pass}, {
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+
+    if(checkWin(gameField, winCombinations)) {
       setModalMessage(`winner: ${currentPlayer}!!!`)
       if(currentPlayer === 'x') {
         setScore({... score, x: score.x + 1})
@@ -89,7 +98,7 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
         setScore({... score, o: score.o + 1})
       }
       changeActiveToDisable(false)
-    } else if(checkDraw(pass)) {
+    } else if(checkDraw(gameField)) {
       setModalMessage('draw!')
       changeActiveToDisable(false)
     }
@@ -101,14 +110,19 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
     contexts.current.forEach((ctx) => {
       ctx!.reset()
     })
-    setPass(Array(9).fill(''))
+    // axios.post(`${import.meta.env.VITE_BACKEND_URL}/new`, {id: 'asdfg'}, {
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    setGameField(Array(9).fill(''))
   }
 
-  console.log('check win', checkWin(pass, winCombinations))
-  console.log('check draw', checkDraw(pass))
-  console.log('passed', pass)
+  // console.log('check win', checkWin(pass, winCombinations))
+  // console.log('check draw', checkDraw(pass))
+  // console.log('passed', gameField)
+  // console.log('mess', modalMessage)
 
-  console.log('mess', modalMessage)
   // console.log(!gameActive)
   return (
     <>
@@ -117,7 +131,7 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
       <div style={{width: size, height: size}}>
         <div className='div-row' style={{width: widhtSize, height: size}}>
           {[...Array(9)].map((_, index) => (
-            <div key={index} className={`btn-row`} style={{width: size / 3, height: size / 3}}
+            <div key={index} className='btn-row' style={{width: size / 3, height: size / 3}}
             onClick={(e: any) => drawing(e, index)} aria-disabled={gameActive}>
               {/* {value === index + 1 ? value : null} */}
               <canvas
@@ -133,7 +147,7 @@ export const Canvas: React.FC<CanvasProps> = ({ size }) => {
     <div className='right-panel'>
         <div>
           <div>name</div>
-          <button>login</button>
+          <button onClick={() => navigate(ROUTES.LOGIN)}>login</button>
         </div>
         <div>
           <div>your turn</div>
