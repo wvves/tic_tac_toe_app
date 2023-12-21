@@ -26,8 +26,10 @@
       "@utils/constants": ["./utils/constants"],
       "@utils/helpers": ["./utils/helpers"],
       "@utils/hooks": ["./utils/hooks"],
+      "@utils/api": ["./utils/api"],
       "@ui/fields": ["./ui/fields"],
       "@ui/button": ["./ui/button"],
+
     }
   },
   "include": ["src"],

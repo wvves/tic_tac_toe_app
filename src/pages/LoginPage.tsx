@@ -1,22 +1,24 @@
 import React from 'react';
 import { validateIsEmpty, validateMaxLength, validateMinLength } from '@utils/helpers';
-import { useForm } from '@utils/hooks';
+import { useForm, useMutation } from '@utils/hooks';
 import { ROUTES } from '@utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { Input, PasswordInput } from '@ui/fields';
 import { Button } from '@ui/button';
+import { api } from '@utils/api';
+
 
 const loginFormValidateSchema = {
   username: (value: string) => {
     const hasErrorisEmpty = validateIsEmpty(value);
     if (hasErrorisEmpty) return hasErrorisEmpty;
-    const hasErrorisMinLength = validateMinLength(value, 6);
+    const hasErrorisMinLength = validateMinLength(value, 1);
     return hasErrorisMinLength;
   },
   password: (value: string) => {
     const hasErrorisEmpty = validateIsEmpty(value);
     if (hasErrorisEmpty) return hasErrorisEmpty;
-    const hasErrorisMinLength = validateMinLength(value, 8);
+    const hasErrorisMinLength = validateMinLength(value, 1);
     if (hasErrorisMinLength) return hasErrorisMinLength;
     const hasErrorMaxLength = validateMaxLength(value, 15);
     return hasErrorMaxLength;
@@ -29,20 +31,21 @@ interface LoginFormValues {
   password: string;
 }
 
-const isErrors = {
-  errUsername: false,
-  errPassword: false
-}
-// let isError = false
 export const LoginPage = () => {
   const navigate = useNavigate()
-  const {values, errors, setFieldValue, handleSubmit, setIsSubmiting} = useForm({
+
+  const { mutationAsync: authMutation, isLoading: authLoading } = useMutation(
+    (params: any) => api.post('login', params)
+  )
+
+  console.log(authLoading)
+  const {values, errors, setFieldValue, handleSubmit, setIsSubmiting} = useForm<LoginFormValues>({
     intialValues: { username: '', password: '' },
     validateSchema: loginFormValidateSchema,
     validateOnChange: false,
-    onSubmit: async () => {
-
-      navigate(ROUTES.HOME);
+    onSubmit: async () => {      
+      // navigate(ROUTES.HOME);
+      const response = await authMutation(values)
       setIsSubmiting(false);
     }
   })

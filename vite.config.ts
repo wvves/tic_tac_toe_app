@@ -12,8 +12,10 @@ export default defineConfig({
       '@utils/constants': path.resolve(__dirname, './src/utils/constants'),
       '@utils/helpers': path.resolve(__dirname, './src/utils/helpers'),
       '@utils/hooks': path.resolve(__dirname, './src/utils/hooks'),
+      '@utils/api': path.resolve(__dirname, './src/utils/api'),
       '@ui/fields': path.resolve(__dirname, './src/ui/fields'),
       '@ui/button': path.resolve(__dirname, './src/ui/button'),
+
     },
   },
   plugins: [react()],
